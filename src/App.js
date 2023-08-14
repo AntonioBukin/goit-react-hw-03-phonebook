@@ -27,15 +27,18 @@ class MyPhone extends Component {
   //
   componentDidMount() {
     const contacts = JSON.parse(localStorage.getItem('MyPhone')); //беремо строку, перетворюємо на масив та додаємо у setState
-    if (contacts && contacts.length) { //якщо contacts існує та довжина більше 0, альтернативний запис "contacts?.length"
+    if (contacts && contacts.length) {
+      //якщо contacts існує та довжина більше 0, альтернативний запис "contacts?.length"
       this.setState({ contacts });
     }
   }
 
   //перетворюємо масив об'єктів на строку та записуємо у localStorage
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     const { contacts } = this.state;
-    localStorage.setItem('MyPhone', JSON.stringify(contacts));
+    if (contacts.length !== prevState.contacts.length) { //якщо довжина нового списка не дорівнює попередньому, ми змінюємо localStorage (якщо ні, не змінюємо)
+      localStorage.setItem('MyPhone', JSON.stringify(contacts));
+    }
   }
 
   handleFilter = ({ target }) => {
