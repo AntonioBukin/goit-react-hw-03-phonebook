@@ -12,13 +12,31 @@ import './shared/styles/styles.scss';
 class MyPhone extends Component {
   state = {
     contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+      // { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+      // { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+      // { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+      // { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
     filter: '',
   };
+
+  //створюємо метод який виведе у консоль повідомлення, але ми його ніде не викликаємо
+  //componentDidMount() - зарезервована назва у React
+  //після монтування спрацьовує componentDidMount(), далі після оновлень спрацьовує componentDidUpdate()
+
+  //
+  componentDidMount() {
+    const contacts = JSON.parse(localStorage.getItem('MyPhone')); //беремо строку, перетворюємо на масив та додаємо у setState
+    if (contacts && contacts.length) { //якщо contacts існує та довжина більше 0, альтернативний запис "contacts?.length"
+      this.setState({ contacts });
+    }
+  }
+
+  //перетворюємо масив об'єктів на строку та записуємо у localStorage
+  componentDidUpdate() {
+    const { contacts } = this.state;
+    localStorage.setItem('MyPhone', JSON.stringify(contacts));
+  }
 
   handleFilter = ({ target }) => {
     this.setState({
@@ -76,7 +94,6 @@ class MyPhone extends Component {
     const normalizedFilter = filter.toLowerCase();
     const result = contacts.filter(({ name }) => {
       return name.toLowerCase().includes(normalizedFilter);
-      //||number.toLowerCase().includes(normalizedFilter) - прибрав фільтр пошуку по номеру
     });
 
     return result;
@@ -85,6 +102,7 @@ class MyPhone extends Component {
   render() {
     //пишемо метод render, який буде повертати розмітку
     const contacts = this.getFilteredPhone();
+    console.log(contacts);
 
     return (
       <div className="container">
